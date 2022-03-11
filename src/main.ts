@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
 	FastifyAdapter,
@@ -11,6 +12,7 @@ async function start() {
 		AppModule,
 		new FastifyAdapter(),
 	);
+	app.useGlobalPipes(new ValidationPipe());
 	await app.listen(PORT);
 	console.log(`Server listen on port ${PORT}`);
 }
