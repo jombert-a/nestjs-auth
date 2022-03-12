@@ -6,6 +6,7 @@ import {
 	Patch,
 	Param,
 	Delete,
+	Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,8 +17,18 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Post()
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
+	async create(@Res() res, @Body() createUserDto: CreateUserDto) {
+		const codesOfExistingUser = await this.usersService.checkUser(
+			createUserDto,
+		);
+		if (codesOfExistingUser.length === 0) {
+			return this.usersService.create(createUserDto);
+		} else {
+			return res.status(400).send({
+				codes: codesOfExistingUser,
+				message: 'User is already exist',
+			});
+		}
 	}
 
 	@Get()

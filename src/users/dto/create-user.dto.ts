@@ -23,8 +23,6 @@ export class CreateUserDto {
 	@Matches(/^(?=.*\d)(?=.*?[a-zA-Z])(?=.*?[\W]).{8,}$/)
 	password: string;
 
-	@Length(8, 32)
-	@IsString()
 	@Match("password", {
         message: "Confirm password must be equal to password"
     })
