@@ -1,31 +1,32 @@
-import { IsEmail, IsPhoneNumber, IsString, MinLength } from 'class-validator';
+import {
+	IsEmail,
+	IsPhoneNumber,
+	IsString,
+	Length,
+	Matches,
+} from 'class-validator';
+import { Match } from '@/decorators/match.decorator';
 
 export class CreateUserDto {
-	@IsString({
-		context: {
-			errorCode: 0,
-		},
-	})
+	@IsString()
+	@Length(3, 32)
 	username: string;
 
-	@IsEmail(
-		{},
-		{
-			context: {
-				errorCode: 1,
-			},
-		},
-	)
+	@IsEmail()
 	email: string;
 
 	@IsPhoneNumber('RU')
 	phone: string;
 
-	@MinLength(8)
+	@Length(8, 32)
 	@IsString()
+	@Matches(/^(?=.*\d)(?=.*?[a-zA-Z])(?=.*?[\W]).{8,}$/)
 	password: string;
 
-	@MinLength(8)
+	@Length(8, 32)
 	@IsString()
+	@Match("password", {
+        message: "Confirm password must be equal to password"
+    })
 	confirmPassword: string;
 }
