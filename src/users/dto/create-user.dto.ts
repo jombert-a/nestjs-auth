@@ -1,10 +1,21 @@
 import { IsEmail, IsPhoneNumber, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-	@IsString()
+	@IsString({
+		context: {
+			errorCode: 0,
+		},
+	})
 	username: string;
 
-	@IsEmail()
+	@IsEmail(
+		{},
+		{
+			context: {
+				errorCode: 1,
+			},
+		},
+	)
 	email: string;
 
 	@IsPhoneNumber('RU')
