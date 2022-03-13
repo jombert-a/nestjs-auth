@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
 	constructor(
@@ -38,7 +39,11 @@ export class UsersService {
 	}
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
-		const createdUser = new this.userModel(createUserDto);
+		const passwordHash = await bcrypt.hash(createUserDto.password, 7);
+		const createdUser = new this.userModel({
+			...createUserDto,
+			password: passwordHash,
+		});
 		return createdUser.save();
 	}
 
@@ -48,10 +53,6 @@ export class UsersService {
 
 	findOne(id: number) {
 		return `This action returns a #${id} user`;
-	}
-
-	update(id: number, updateUserDto: UpdateUserDto) {
-		return `This action updates a #${id} user`;
 	}
 
 	async remove() {
