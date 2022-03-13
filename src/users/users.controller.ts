@@ -18,17 +18,8 @@ export class UsersController {
 
 	@Post()
 	async create(@Res() res, @Body() createUserDto: CreateUserDto) {
-		const codesOfExistingUser = await this.usersService.checkUser(
-			createUserDto,
-		);
-		if (codesOfExistingUser.length === 0) {
-			return this.usersService.create(createUserDto);
-		} else {
-			return res.status(400).send({
-				codes: codesOfExistingUser,
-				message: 'User is already exist',
-			});
-		}
+		await this.usersService.checkUser(createUserDto);
+		return this.usersService.create(createUserDto);
 	}
 
 	@Get()

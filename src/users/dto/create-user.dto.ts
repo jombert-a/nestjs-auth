@@ -1,6 +1,5 @@
 import {
 	IsEmail,
-	IsPhoneNumber,
 	IsString,
 	Length,
 	Matches,
@@ -15,9 +14,6 @@ export class CreateUserDto {
 
 	@IsEmail()
 	email: string;
-
-	@IsPhoneNumber('RU')
-	phone: string;
 
 	@Length(8, 32)
 	@IsString()

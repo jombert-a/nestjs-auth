@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -11,31 +10,28 @@ export class UsersService {
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 	) {}
 
-	async checkUser(createUserDto: CreateUserDto): Promise<number[]> {
+	async checkUser(createUserDto: CreateUserDto): Promise<void> {
 		const codes: number[] = [];
 
 		const usernameCandidate = await this.userModel.findOne({
 			username: createUserDto.username,
 		});
 		if (usernameCandidate) {
-			codes.push(1);
+			throw new HttpException({
+				status: 0,
+				error: `Username "${createUserDto.username}" is already taken`
+			}, HttpStatus.BAD_REQUEST)
 		}
 
 		const emailCandidate = await this.userModel.findOne({
 			email: createUserDto.email,
 		});
 		if (emailCandidate) {
-			codes.push(2);
+			throw new HttpException({
+				status: 1,
+				error: `Email "${createUserDto.email}" is already taken`
+			}, HttpStatus.BAD_REQUEST)
 		}
-
-		const phoneCandidate = await this.userModel.findOne({
-			phone: createUserDto.phone,
-		});
-		if (phoneCandidate) {
-			codes.push(3);
-		}
-
-		return codes;
 	}
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
