@@ -4,13 +4,21 @@ import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '@/users/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
+console.log(process.env.JWT_SECRET);
 
 @Module({
 	controllers: [AuthController],
 	providers: [AuthService],
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-		JwtModule.register({ secret: 'test' }),
+		JwtModule.registerAsync({
+			inject: [ConfigService],
+			useFactory: (config: ConfigService) => ({
+				secret: config.get('JWT_SECRET'),
+			}),
+		}),
 	],
 })
 export class AuthModule {}

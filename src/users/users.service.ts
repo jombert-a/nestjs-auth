@@ -4,10 +4,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
 	constructor(
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
+		private readonly jwtService: JwtService,
 	) {}
 
 	async checkUser(createUserDto: CreateUserDto): Promise<void> {
@@ -17,20 +19,26 @@ export class UsersService {
 			username: createUserDto.username,
 		});
 		if (usernameCandidate) {
-			throw new HttpException({
-				status: 0,
-				error: `Username "${createUserDto.username}" is already taken`
-			}, HttpStatus.BAD_REQUEST)
+			throw new HttpException(
+				{
+					status: 0,
+					error: `Username "${createUserDto.username}" is already taken`,
+				},
+				HttpStatus.BAD_REQUEST,
+			);
 		}
 
 		const emailCandidate = await this.userModel.findOne({
 			email: createUserDto.email,
 		});
 		if (emailCandidate) {
-			throw new HttpException({
-				status: 1,
-				error: `Email "${createUserDto.email}" is already taken`
-			}, HttpStatus.BAD_REQUEST)
+			throw new HttpException(
+				{
+					status: 1,
+					error: `Email "${createUserDto.email}" is already taken`,
+				},
+				HttpStatus.BAD_REQUEST,
+			);
 		}
 	}
 
@@ -47,8 +55,16 @@ export class UsersService {
 		return this.userModel.find().exec();
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} user`;
+	findOne(token: string): Promise<UserDocument> {
+		if (!token) {
+			throw new HttpException({
+				error: 0,
+				message:'UNAUTHORIZED'
+			}, HttpStatus.UNAUTHORIZED);
+		}
+		return this.jwtService.verify(token, {
+			secret: process.env.JWT_SECRET,
+		});
 	}
 
 	async remove() {

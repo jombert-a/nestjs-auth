@@ -7,6 +7,7 @@ import {
 	Param,
 	Delete,
 	Res,
+	Headers,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,14 +23,14 @@ export class UsersController {
 		return this.usersService.create(createUserDto);
 	}
 
-	@Get()
+	@Get('all')
 	findAll() {
 		return this.usersService.findAll();
 	}
 
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.usersService.findOne(+id);
+	@Get()
+	findOne(@Headers() headers: string) {
+		return this.usersService.findOne(headers['bearer-token']);
 	}
 
 	@Delete()

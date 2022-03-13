@@ -31,10 +31,10 @@ export class AuthService {
 
 	createJsonWebToken(user: UserDocument): string {
 		return this.jwtService.sign({
-            id: user.id,
-            email: user.email,
-            username: user.username
-        });
+			id: user.id,
+			email: user.email,
+			username: user.username,
+		});
 	}
 
 	async authWithEmailAndPassword(loginDto: loginWithEmailDto) {
