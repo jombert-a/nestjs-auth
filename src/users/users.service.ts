@@ -48,7 +48,7 @@ export class UsersService {
 			...createUserDto,
 			password: passwordHash,
 		});
-		return createdUser.save();
+		return await createdUser.save();
 	}
 
 	async findAll(): Promise<User[]> {
@@ -57,10 +57,13 @@ export class UsersService {
 
 	findOne(token: string): Promise<UserDocument> {
 		if (!token) {
-			throw new HttpException({
-				error: 0,
-				message:'UNAUTHORIZED'
-			}, HttpStatus.UNAUTHORIZED);
+			throw new HttpException(
+				{
+					error: 0,
+					message: 'UNAUTHORIZED',
+				},
+				HttpStatus.UNAUTHORIZED,
+			);
 		}
 		return this.jwtService.verify(token, {
 			secret: process.env.JWT_SECRET,
