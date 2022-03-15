@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '@/users/schemas/user.schema';
+import { User, UserSchema } from '@/modules/users/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersModule } from '@/users/users.module';
+import { UsersModule } from '@/modules/users/users.module';
 
 console.log(process.env.JWT_SECRET);
 

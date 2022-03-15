@@ -1,4 +1,4 @@
-import { User, UserDocument } from '@/users/schemas/user.schema';
+import { User, UserDocument } from '@/modules/users/schemas/user.schema';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -6,8 +6,8 @@ import { loginInputDto } from './dto/login.input.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { loginOutputDto } from './dto/login.output.dto';
-import { UsersService } from '@/users/users.service'
-import { userOutputDto } from '@/users/dto/user.output.dto';
+import { UsersService } from '@/modules/users/users.service'
+import { userOutputDto } from '@/modules/users/dto/user.output.dto';
 
 @Injectable()
 export class AuthService {
