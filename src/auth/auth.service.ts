@@ -2,15 +2,19 @@ import { User, UserDocument } from '@/users/schemas/user.schema';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { loginWithEmailDto } from './dto/login-with-email.dto';
+import { loginInputDto } from './dto/login.input.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { loginOutputDto } from './dto/login.output.dto';
+import { UsersService } from '@/users/users.service'
+import { userOutputDto } from '@/users/dto/user.output.dto';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		private readonly jwtService: JwtService,
+		private readonly usersService: UsersService
 	) {}
 
 	async checkPassword(
@@ -29,19 +33,15 @@ export class AuthService {
 		}
 	}
 
-	createJsonWebToken(user: UserDocument): string {
-		return this.jwtService.sign({
-			id: user.id,
-			email: user.email,
-			username: user.username,
-		});
+	createToken(user: UserDocument): loginOutputDto {		
+		return {
+			access_token: this.jwtService.sign(user.toJSON())
+		};
 	}
 
-	async authWithEmailAndPassword(loginDto: loginWithEmailDto) {
-		const candidateToLogin: UserDocument = await this.userModel.findOne({
-			email: loginDto.email,
-		});
+	async auth(loginDto: loginInputDto): Promise<loginOutputDto> {
+		const candidateToLogin: UserDocument = await this.usersService.findOneByPhone(loginDto.phone);
 		await this.checkPassword(loginDto.password, candidateToLogin.password);
-		return this.createJsonWebToken(candidateToLogin);
+		return this.createToken(candidateToLogin);
 	}
 }

@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/user.input.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { userOutputDto } from './dto/user.output.dto';
 @Injectable()
 export class UsersService {
 	constructor(
@@ -13,49 +14,56 @@ export class UsersService {
 	) {}
 
 	async checkUserExisting(createUserDto: CreateUserDto): Promise<void> {
-		const codes: number[] = [];
-		const usernameCandidate = await this.userModel.findOne({
-			username: createUserDto.username,
-		});
-		if (usernameCandidate) {
-			throw new HttpException(
-				{
-					status: 0,
-					error: `Username "${createUserDto.username}" is already taken`,
-				},
-				HttpStatus.BAD_REQUEST,
-			);
-		}
 		const emailCandidate = await this.userModel.findOne({
 			email: createUserDto.email,
 		});
 		if (emailCandidate) {
 			throw new HttpException(
 				{
-					status: 1,
+					status: 0,
 					error: `Email "${createUserDto.email}" is already taken`,
+				},
+				HttpStatus.BAD_REQUEST,
+			);
+		}
+		const phoneCandidate = await this.userModel.findOne({
+			phone: createUserDto.phone,
+		});
+		if (phoneCandidate) {
+			throw new HttpException(
+				{
+					status: 1,
+					error: `Email "${createUserDto.phone}" is already taken`,
 				},
 				HttpStatus.BAD_REQUEST,
 			);
 		}
 	}
 
-	// async parseToken(token: string): 
+	parseToken(token: string): UserDocument {
+		return this.jwtService.verify(token, {
+			secret: process.env.JWT_SECRET,
+		});
+	}
 
-	async create(createUserDto: CreateUserDto): Promise<User> {
-		const passwordHash = await bcrypt.hash(createUserDto.password, 7);
+	async hashPassword(passwordToHash: string): Promise<string> {
+		return await bcrypt.hash(passwordToHash, 7);
+	}
+
+	async createUser(createUserDto: CreateUserDto): Promise<void> {
+		const passwordHash = await this.hashPassword(createUserDto.password);
 		const createdUser = new this.userModel({
 			...createUserDto,
 			password: passwordHash,
 		});
-		return await createdUser.save();
+		await createdUser.save();
 	}
 
-	async findAll(): Promise<User[]> {
-		return this.userModel.find().exec();
+	async findOneByPhone(phone: string): Promise<UserDocument> {
+		return await this.userModel.findOne({ phone });
 	}
 
-	findOne(token: string): Promise<UserDocument> {
+	async findOneByToken(token: string): Promise<userOutputDto> {
 		if (!token) {
 			throw new HttpException(
 				{
@@ -65,12 +73,15 @@ export class UsersService {
 				HttpStatus.UNAUTHORIZED,
 			);
 		}
-		return this.jwtService.verify(token, {
-			secret: process.env.JWT_SECRET,
-		});
+		const userDocument = this.parseToken(token)
+		return new userOutputDto(userDocument);
 	}
 
-	async remove() {
+	async findAll() {
+		return this.userModel.find().exec()
+	}
+
+	async removeAllUsers() {
 		return this.userModel.deleteMany().exec();
 	}
 }

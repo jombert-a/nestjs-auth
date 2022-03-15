@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '@/users/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { UsersModule } from '@/users/users.module';
 
 console.log(process.env.JWT_SECRET);
 
@@ -19,6 +20,7 @@ console.log(process.env.JWT_SECRET);
 				secret: config.get('JWT_SECRET'),
 			}),
 		}),
+		UsersModule
 	],
 })
 export class AuthModule {}

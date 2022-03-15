@@ -1,45 +1,35 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Delete,
-	Res,
-	Headers,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Headers } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/user.input.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { User, UserDocument } from './schemas/user.schema';
+import { User } from './schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@ApiOperation({ summary: 'Create user' })
-	@ApiResponse({ status: 200, type: User })
+	@ApiResponse({ status: 200 })
 	@Post()
-	async create(@Body() createUserDto: CreateUserDto) {
+	async createUser(@Body() createUserDto: CreateUserDto) {
 		await this.usersService.checkUserExisting(createUserDto);
-		return await this.usersService.create(createUserDto);
-	}
-
-	@ApiOperation({ summary: 'Get all users' })
-	@ApiResponse({ status: 200, type: [User] })
-	@Get('all')
-	findAll() {
-		return this.usersService.findAll();
+		await this.usersService.createUser(createUserDto);
 	}
 
 	@ApiOperation({ summary: 'Get user info' })
 	@Get()
 	findOne(@Headers() headers: string) {
-		return this.usersService.findOne(headers['bearer-token']);
+		return this.usersService.findOneByToken(headers['bearer-token']);
+	}
+
+	@Get('all')
+	findAll() {
+		return this.usersService.findAll()
 	}
 
 	@ApiOperation({ summary: 'Remove all users' })
 	@Delete()
 	remove() {
-		return this.usersService.remove();
+		return this.usersService.removeAllUsers();
 	}
 }

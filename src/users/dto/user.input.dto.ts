@@ -1,5 +1,6 @@
 import {
 	IsEmail,
+	IsPhoneNumber,
 	IsString,
 	Length,
 	Matches,
@@ -8,12 +9,17 @@ import { Match } from '@/decorators/match.decorator';
 import { passwordRegexp } from '@/regexps';
 
 export class CreateUserDto {
-	@IsString()
-	@Length(3, 32)
-	username: string;
-
 	@IsEmail()
 	email: string;
+
+	@IsPhoneNumber('RU')
+	phone: string;
+
+	@IsString()
+	firstName: string;
+
+	@IsString()
+	lastName: string;
 
 	@Length(8, 32)
 	@IsString()
