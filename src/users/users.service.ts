@@ -12,9 +12,8 @@ export class UsersService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async checkUser(createUserDto: CreateUserDto): Promise<void> {
+	async checkUserExisting(createUserDto: CreateUserDto): Promise<void> {
 		const codes: number[] = [];
-
 		const usernameCandidate = await this.userModel.findOne({
 			username: createUserDto.username,
 		});
@@ -27,7 +26,6 @@ export class UsersService {
 				HttpStatus.BAD_REQUEST,
 			);
 		}
-
 		const emailCandidate = await this.userModel.findOne({
 			email: createUserDto.email,
 		});
@@ -41,6 +39,8 @@ export class UsersService {
 			);
 		}
 	}
+
+	// async parseToken(token: string): 
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
 		const passwordHash = await bcrypt.hash(createUserDto.password, 7);

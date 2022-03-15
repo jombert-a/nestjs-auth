@@ -20,7 +20,7 @@ export class UsersController {
 	@ApiResponse({ status: 200, type: User })
 	@Post()
 	async create(@Body() createUserDto: CreateUserDto) {
-		await this.usersService.checkUser(createUserDto);
+		await this.usersService.checkUserExisting(createUserDto);
 		return await this.usersService.create(createUserDto);
 	}
 
