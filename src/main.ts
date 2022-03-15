@@ -20,6 +20,10 @@ async function start() {
 		.setDescription('documentation')
 		.setVersion('1.0.0')
 		.addTag('rbrta')
+		.addBearerAuth(
+			{ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+			'JWT',
+		)
 		.build();
 	const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
 	SwaggerModule.setup('api', app, swaggerDocument);

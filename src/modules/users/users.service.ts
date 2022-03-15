@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto } from './dto/user.input.dto';
+import { userInputDto } from './dto/user.input.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -13,7 +13,7 @@ export class UsersService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async checkUserExisting(createUserDto: CreateUserDto): Promise<void> {
+	async checkUserExisting(createUserDto: userInputDto): Promise<void> {
 		const emailCandidate = await this.userModel.findOne({
 			email: createUserDto.email,
 		});
@@ -50,7 +50,7 @@ export class UsersService {
 		return await bcrypt.hash(passwordToHash, 7);
 	}
 
-	async createUser(createUserDto: CreateUserDto): Promise<void> {
+	async createUser(createUserDto: userInputDto): Promise<void> {
 		const passwordHash = await this.hashPassword(createUserDto.password);
 		const createdUser = new this.userModel({
 			...createUserDto,

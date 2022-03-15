@@ -7,25 +7,32 @@ import {
 } from 'class-validator';
 import { Match } from '@/decorators/match.decorator';
 import { passwordRegexp } from '@/regexps';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto {
+export class userInputDto {
+	@ApiProperty({ description: 'Email' })
 	@IsEmail()
 	email: string;
 
+	@ApiProperty({ description: 'Phone number (ru)' })
 	@IsPhoneNumber('RU')
 	phone: string;
 
+	@ApiProperty({ description: 'First name' })
 	@IsString()
 	firstName: string;
 
+	@ApiProperty({ description: 'Last name' })
 	@IsString()
 	lastName: string;
 
+	@ApiProperty({ description: 'Password' })
 	@Length(8, 32)
 	@IsString()
 	@Matches(passwordRegexp)
 	password: string;
 
+	@ApiProperty({ description: 'Confirm password' })
 	@Match('password', {
 		message: 'Confirm password must be equal to password',
 	})

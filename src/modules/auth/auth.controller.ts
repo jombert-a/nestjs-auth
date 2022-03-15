@@ -10,7 +10,7 @@ export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@ApiOperation({ summary: 'Login method' })
-	@ApiResponse({ status: 200, type: loginOutputDto })
+	@ApiResponse({ status: 201, type: loginOutputDto })
 	@Post()
 	login(@Body() loginDto: loginInputDto): Promise<loginOutputDto> {
 		return this.authService.auth(loginDto);
