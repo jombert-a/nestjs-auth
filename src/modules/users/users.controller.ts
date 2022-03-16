@@ -23,21 +23,13 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
-	@ApiOperation({ summary: 'Create user' })
-	@ApiResponse({ status: 201 })
-	@Post()
-	async createUser(@Body() userInputDto: userInputDto) {
-		await this.usersService.checkUserExisting(userInputDto);
-		await this.usersService.createUser(userInputDto);
-	}
-
 	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth('JWT')
 	@ApiOperation({ summary: 'Get user info' })
 	@ApiResponse({ status: 200, type: userOutputDto })
 	@Get()
 	findOne(@Req() req: any) {
-		return new userOutputDto(req.user)
+		return new userOutputDto(req.user);
 	}
 
 	@Get('all')
