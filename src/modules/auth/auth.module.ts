@@ -6,12 +6,11 @@ import { User, UserSchema } from '@/modules/users/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersModule } from '@/modules/users/users.module';
-
-console.log(process.env.JWT_SECRET);
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
 	controllers: [AuthController],
-	providers: [AuthService],
+	providers: [AuthService, JwtStrategy],
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		JwtModule.registerAsync({

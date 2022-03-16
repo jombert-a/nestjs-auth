@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Delete, Headers } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Body,
+	Delete,
+	UseGuards,
+	Req,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { userInputDto } from './dto/user.input.dto';
 import {
@@ -8,6 +16,7 @@ import {
 	ApiTags,
 } from '@nestjs/swagger';
 import { userOutputDto } from './dto/user.output.dto';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,12 +31,13 @@ export class UsersController {
 		await this.usersService.createUser(userInputDto);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth('JWT')
 	@ApiOperation({ summary: 'Get user info' })
 	@ApiResponse({ status: 200, type: userOutputDto })
 	@Get()
-	findOne(@Headers() headers: string) {
-		return this.usersService.findOneByToken(headers['bearer-token']);
+	findOne(@Req() req: any) {
+		return new userOutputDto(req.user)
 	}
 
 	@Get('all')
