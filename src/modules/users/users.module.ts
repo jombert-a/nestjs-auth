@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { RolesModule } from '../roles/roles.module';
 
 @Module({
 	controllers: [UsersController],
@@ -17,6 +18,7 @@ import { ConfigService } from '@nestjs/config';
 				secret: config.get('JWT_SECRET'),
 			}),
 		}),
+		RolesModule
 	],
 	exports: [
 		UsersService

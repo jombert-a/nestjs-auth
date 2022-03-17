@@ -6,11 +6,13 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { userOutputDto } from './dto/user.output.dto';
+import { RolesService, UserRoleType } from '../roles/roles.service';
 @Injectable()
 export class UsersService {
 	constructor(
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		private readonly jwtService: JwtService,
+		private readonly rolesService: RolesService
 	) {}
 
 	async checkUserExisting(createUserDto: userInputDto): Promise<void> {
@@ -51,10 +53,15 @@ export class UsersService {
 	}
 
 	async createUser(createUserDto: userInputDto): Promise<void> {
-		const passwordHash = await this.hashPassword(createUserDto.password);
+		const passwordHash: string = await this.hashPassword(createUserDto.password);
+		let userRole: UserRoleType = {
+			name: 'USER'
+		}
+		const basicRoleId = await this.rolesService.findRoleByName(userRole)
 		const createdUser = new this.userModel({
 			...createUserDto,
 			password: passwordHash,
+			role: basicRoleId
 		});
 		await createdUser.save();
 	}

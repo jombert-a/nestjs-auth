@@ -13,14 +13,14 @@ export class AuthController {
 
 	@ApiOperation({ summary: 'Login by phone' })
 	@ApiResponse({ status: 201, type: loginOutputDto })
-	@Post('login')
+	@Post('sign-in')
 	login(@Body() loginDto: loginInputDto): Promise<loginOutputDto> {
 		return this.authService.auth(loginDto);
 	}
 
 	@ApiOperation({ summary: 'Registration'})
 	@ApiResponse({ status: 201 })
-	@Post('registration')
+	@Post('sign-up')
 	registration(@Body() user: userInputDto): Promise<void> {
 		return this.usersService.createUser(user)
 	}
