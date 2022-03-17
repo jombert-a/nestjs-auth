@@ -4,11 +4,19 @@ import { Model } from 'mongoose';
 import { roleInputDto } from './dto/role.input.dto';
 import { Role, RoleDocument } from './schems/role.schemas';
 
-export type AdminRoleType = {
+type AdminRoleType = {
 	name: 'ADMIN'
 }
 
-export type UserRoleType = {
+export const AdminRole: AdminRoleType = {
+	name: 'ADMIN'
+}
+
+type UserRoleType = {
+	name: 'USER'
+}
+
+export const UserRole: UserRoleType = {
 	name: 'USER'
 }
 

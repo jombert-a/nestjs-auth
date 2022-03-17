@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { userInputDto } from './dto/user.input.dto';
 import { User, UserDocument } from './schemas/user.schema';
@@ -6,13 +6,14 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { userOutputDto } from './dto/user.output.dto';
-import { RolesService, UserRoleType } from '../roles/roles.service';
+import { RolesService, UserRole } from '../roles/roles.service';
+
 @Injectable()
 export class UsersService {
 	constructor(
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		private readonly jwtService: JwtService,
-		private readonly rolesService: RolesService
+		private readonly rolesService: RolesService,
 	) {}
 
 	async checkUserExisting(createUserDto: userInputDto): Promise<void> {
@@ -53,15 +54,14 @@ export class UsersService {
 	}
 
 	async createUser(createUserDto: userInputDto): Promise<void> {
-		const passwordHash: string = await this.hashPassword(createUserDto.password);
-		let userRole: UserRoleType = {
-			name: 'USER'
-		}
-		const basicRoleId = await this.rolesService.findRoleByName(userRole)
+		const passwordHash: string = await this.hashPassword(
+			createUserDto.password,
+		);
+		const basicRoleId = await this.rolesService.findRoleByName(UserRole);
 		const createdUser = new this.userModel({
 			...createUserDto,
 			password: passwordHash,
-			role: basicRoleId
+			role: basicRoleId,
 		});
 		await createdUser.save();
 	}
@@ -80,12 +80,12 @@ export class UsersService {
 				HttpStatus.UNAUTHORIZED,
 			);
 		}
-		const userDocument = this.parseToken(token)
+		const userDocument = this.parseToken(token);
 		return new userOutputDto(userDocument);
 	}
 
 	async findAll() {
-		return this.userModel.find().exec()
+		return this.userModel.find().exec();
 	}
 
 	async removeAllUsers() {

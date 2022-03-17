@@ -29,6 +29,7 @@ async function start() {
 	SwaggerModule.setup('api', app, swaggerDocument);
 
 	const PORT = process.env.PORT || 3000;
+
 	await app.listen(PORT);
 	console.log(`Server listen on port ${PORT}`);
 }

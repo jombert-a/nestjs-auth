@@ -1,14 +1,5 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Delete,
-	UseGuards,
-	Req,
-} from '@nestjs/common';
+import { Controller, Get, Delete, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { userInputDto } from './dto/user.input.dto';
 import {
 	ApiBearerAuth,
 	ApiOperation,
@@ -17,6 +8,8 @@ import {
 } from '@nestjs/swagger';
 import { userOutputDto } from './dto/user.output.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { Roles } from '@/decorators/roles.decorator';
+import { AdminRole } from '../roles/roles.service';
 
 @ApiTags('Users')
 @Controller('users')
@@ -32,6 +25,7 @@ export class UsersController {
 		return new userOutputDto(req.user);
 	}
 
+	@Roles(AdminRole)
 	@Get('all')
 	findAll() {
 		return this.usersService.findAll();
