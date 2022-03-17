@@ -30,6 +30,7 @@ module.exports = {
 				'revert',
 				'style',
 				'test',
+				'mod'
 			],
 		],
 	},
