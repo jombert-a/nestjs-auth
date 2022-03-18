@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Types, Schema as MongooseSchema } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -22,9 +22,9 @@ export class User {
 	@Prop({ required: true })
 	lastName: string;
 
-	@ApiProperty({ example: 'USER', description: 'User`s role'})
-	@Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Role'  })
-	role: Types.ObjectId;
+	@ApiProperty({ example: 'USER', description: 'User`s role' })
+	@Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Role' })
+	role: MongooseSchema.Types.ObjectId;
 
 	@ApiProperty({ example: 'hash(123qwe!@)', description: 'Password' })
 	@Prop({ required: true })

@@ -1,4 +1,6 @@
 import { RoleType } from '@/modules/roles/roles.service';
+import { Role, RoleDocument } from '@/modules/roles/schems/role.schemas';
+import { UserDocument } from '@/modules/users/schemas/user.schema';
 import {
 	Injectable,
 	CanActivate,
@@ -6,12 +8,19 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { Schema as MongooseSchema, Model } from 'mongoose';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-	constructor(private reflector: Reflector) {}
+	constructor(
+		@InjectModel(Role.name) private rolesModel: Model<RoleDocument>,
+		private reflector: Reflector,
+		private jwtService: JwtService,
+	) {}
 
-	canActivate(context: ExecutionContext): boolean {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
 		try {
 			const roles = this.reflector.get<RoleType[]>(
 				'roles',
@@ -31,10 +40,16 @@ export class RolesGuard implements CanActivate {
 				return false;
 			}
 
-			// TODO: доделать авторизацию по роли
-			// const user = this.jwtService.verify(token)
+			const user: UserDocument = this.jwtService.verify(token);
+			const roleId: MongooseSchema.Types.ObjectId = user.role;
+			const role: RoleDocument = await this.rolesModel.findOne({
+				id: roleId,
+			});
 
-			return false;
+			if (!role) return false;
+
+            // @ts-ignore
+			return (roles.map((el) => el.name).includes(role.name));
 		} catch {
 			throw new UnauthorizedException();
 		}
