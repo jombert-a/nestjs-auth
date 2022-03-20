@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsPhoneNumber, IsString, Matches, IsNotEmpty } from 'class-validator';
-import { passwordRegexp } from '../../../regexps';
+import { passwordRegexp } from '../../../shared/regexps';
 
 export class loginInputDto {
 	@ApiProperty({ description: 'Phone number (ru)' })

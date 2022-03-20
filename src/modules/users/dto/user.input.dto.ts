@@ -6,8 +6,8 @@ import {
 	Matches,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { passwordRegexp } from '../../../regexps';
-import { Match } from '../../../decorators/match.decorator';
+import { passwordRegexp } from '../../../shared/regexps';
+import { Match } from '../../../shared/decorators/match.decorator';
 
 export class userInputDto {
 	@ApiProperty({ description: 'Email' })

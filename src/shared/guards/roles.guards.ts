@@ -9,9 +9,9 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Schema as MongooseSchema, Model } from 'mongoose';
-import { RoleType } from '../../roles/roles.service';
-import { Role, RoleDocument } from '../../roles/schems/role.schemas';
-import { UserDocument } from '../../users/schemas/user.schema';
+import { RoleType } from '../../modules/roles/roles.service';
+import { Role, RoleDocument } from '../../modules/roles/schems/role.schemas';
+import { UserDocument } from '../../modules/users/schemas/user.schema';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

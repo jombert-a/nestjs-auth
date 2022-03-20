@@ -5,7 +5,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './modules/auth/guards/roles.guards';
+import { RolesGuard } from './shared/guards/roles.guards';
 import { JwtModule } from '@nestjs/jwt';
 import { Role, RoleSchema } from './modules/roles/schems/role.schemas';
 
