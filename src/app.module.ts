@@ -7,7 +7,8 @@ import { RolesModule } from './modules/roles/roles.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './shared/guards/roles.guards';
 import { JwtModule } from '@nestjs/jwt';
-import { Role, RoleSchema } from './modules/roles/schems/role.schemas';
+import { Role, RoleSchema } from './modules/roles/schemas/role.schemas';
+import { ApartmentsModule } from './modules/apartments/apartments.module';
 
 @Module({
 	imports: [
@@ -26,6 +27,7 @@ import { Role, RoleSchema } from './modules/roles/schems/role.schemas';
 				secret: config.get('JWT_SECRET'),
 			}),
 		}),
+		ApartmentsModule,
 	],
 	controllers: [],
 	providers: [

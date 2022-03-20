@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Schema as MongooseSchema, Model } from 'mongoose';
 import { RoleType } from '../../modules/roles/roles.service';
-import { Role, RoleDocument } from '../../modules/roles/schems/role.schemas';
+import { Role, RoleDocument } from '../../modules/roles/schemas/role.schemas';
 import { UserDocument } from '../../modules/users/schemas/user.schema';
 
 @Injectable()
