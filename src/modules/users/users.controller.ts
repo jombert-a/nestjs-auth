@@ -7,9 +7,9 @@ import {
 	ApiTags,
 } from '@nestjs/swagger';
 import { userOutputDto } from './dto/user.output.dto';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { Roles } from '@/decorators/roles.decorator';
 import { AdminRole } from '../roles/roles.service';
+import { Roles } from '../../decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
