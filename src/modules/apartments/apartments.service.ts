@@ -17,8 +17,10 @@ export class ApartmentsService {
 		return apartments;
 	}
 
-    async createFloorApartment(floorDTO: FloorApartmentInputDTO): Promise<ApartmentDocument> {
+    async createFloorApartment(floorDTO: FloorApartmentInputDTO): Promise<FloorApartmentDocument> {
+        console.log(floorDTO)
         const apartment: ApartmentDocument = await new this.apartmentModel(floorDTO).save()
-        return apartment;
+        const floorApartment: FloorApartmentDocument = await new this.floorApartmentModel({ apartment: apartment._id, ...floorDTO }).save()
+        return floorApartment;
     }
 }
