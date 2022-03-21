@@ -1,39 +1,40 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose'
-
-export type ApartmentDocument = Apartment & Document;
+import { Document } from 'mongoose';
 @Schema()
 export class Apartment {
-    @ApiProperty({ description: 'Country' })
+	@ApiProperty({ description: 'Country' })
 	@Prop({ required: true })
-    country: string;
+	country: string;
 
-    @ApiProperty({ description: 'Region' })
+	@ApiProperty({ description: 'Region' })
 	@Prop({ required: true })
 	region: string;
 
-    @ApiProperty({ description: 'City' })
+	@ApiProperty({ description: 'City' })
 	@Prop({ required: true })
 	city: string;
 
-    @ApiProperty({ description: 'Address' })
+	@ApiProperty({ description: 'Address' })
 	@Prop({ required: true })
 	address: string;
 
-    @ApiProperty({ description: 'Total area' })
+	@ApiProperty({ description: 'Total area' })
 	@Prop({ required: true })
-    totalArea: number;
+	totalArea: number;
 
-    @ApiProperty({ description: 'Monthly fee' })
+	@ApiProperty({ description: 'Monthly fee' })
 	@Prop({ required: true })
-    monthlyFee: number;
+	monthlyFee: number;
 
-    @ApiProperty({ description: 'Is animals freandly'})
-    @Prop({ required: true })
-    isAnimalsFreandly: boolean;
+	@ApiProperty({ description: 'Is animals freandly' })
+	@Prop({ required: true })
+	isAnimalsFreandly: boolean;
 
-    @ApiProperty({ description: 'Is children freandly'})
-    @Prop({ required: true })
-    isChildrenFreandly: boolean;
+	@ApiProperty({ description: 'Is children freandly' })
+	@Prop({ required: true })
+	isChildrenFreandly: boolean;
 }
+
+export type ApartmentDocument = Apartment & Document;
+export const ApartmentSchema = SchemaFactory.createForClass(Apartment);
