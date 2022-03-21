@@ -28,4 +28,12 @@ export class Apartment {
     @ApiProperty({ description: 'Monthly fee' })
 	@Prop({ required: true })
     monthlyFee: number;
+
+    @ApiProperty({ description: 'Is animals freandly'})
+    @Prop({ required: true })
+    isAnimalsFreandly: boolean;
+
+    @ApiProperty({ description: 'Is children freandly'})
+    @Prop({ required: true })
+    isChildrenFreandly: boolean;
 }
